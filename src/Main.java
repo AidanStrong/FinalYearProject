@@ -14,5 +14,7 @@ public class Main {
 
         myCard = myDeck.deal();
         System.out.println(myCard.toString());
+
+
     }
 }

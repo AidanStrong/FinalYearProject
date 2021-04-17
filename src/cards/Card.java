@@ -9,7 +9,6 @@ public class Card {
     //Attributes
     private Rank cardRank;
     private Suit cardSuit;
-
     //Constructor
     public Card(){
 
@@ -73,6 +72,8 @@ public class Card {
     public Suit getSuit(){
         return cardSuit;
     }
+
+    public int getValue(){ return cardRank.getValue(); }
 
     //toString
     @Override
