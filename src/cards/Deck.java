@@ -6,16 +6,31 @@ import java.util.*;
 
 public class Deck implements Iterable<Card> {
 
-    Card[] theDeck = new Card[52];
+    private int numDecks = 1;
+
+    Card[] theDeck;
     private Iterator<Card> deckIt = iterator();
+    private double penetration;
+    private ArrayList<Card> dealtCards;
 
     public Deck() {
+        newDeck();
+        theDeck = new Card[numDecks * 52];
+    }
+
+    public Deck(int numDecks) {
+        this.numDecks = numDecks;
+        theDeck = new Card[numDecks * 52];
         newDeck();
     }
 
     //getters
     public Card[] getTheDeck() {
         return theDeck;
+    }
+
+    public ArrayList<Card> getDealtCards(){
+        return dealtCards;
     }
 
     public int getSize() {
@@ -25,14 +40,16 @@ public class Deck implements Iterable<Card> {
     //create the deck
     public void newDeck() {
         int n = 0;
-        for (Card.Suit suit : Card.Suit.values()) {
-            for (Card.Rank rank : Card.Rank.values()) {
-                Card card = new Card(rank, suit);
-                theDeck[n] = card;
-                n++;
+
+        for(int i = 0; i < numDecks; i++) {
+            for (Card.Suit suit : Card.Suit.values()) {
+                for (Card.Rank rank : Card.Rank.values()) {
+                    Card card = new Card(rank, suit);
+                    theDeck[n] = card;
+                    n++;
+                }
             }
         }
-
         //shuffle deck - Fisher–Yates shuffle
         Random rand = new Random();
         for (int i = theDeck.length - 1; i > 0; i--) {
@@ -41,11 +58,20 @@ public class Deck implements Iterable<Card> {
             theDeck[index] = theDeck[i];
             theDeck[i] = tempCard;
         }
+        dealtCards = new ArrayList();
     }
-
     //return next card, used for dealing cards
     public Card deal(){
         return deckIt.next();
+    }
+
+    public double getPenetration(){
+        return penetration;
+    }
+
+    public void reshuffleShoe(){
+        newDeck();
+        deckIt = iterator();
     }
 
     //iterator
@@ -70,7 +96,9 @@ public class Deck implements Iterable<Card> {
             Card nextCard;
             nextCard = theDeck[currentPointer];
             currentPointer += 1;
-            System.out.println("dealing " + nextCard.toString());
+            penetration = (currentPointer*100)/(numDecks * 52);
+            dealtCards.add(nextCard);
+            //System.out.println("dealing " + nextCard.toString());
             return nextCard;
         }
     }
@@ -79,6 +107,7 @@ public class Deck implements Iterable<Card> {
     public String toString(){
         String returnString = "\n";
         for(int i = 0; i < theDeck.length; i++){
+            System.out.println(i);
             returnString = returnString + theDeck[i].toString() + "\n";
         }
         return returnString;
@@ -86,7 +115,16 @@ public class Deck implements Iterable<Card> {
 
     //test harness
     public static void main(String[] args) {
-        Deck myDeck = new Deck();
-        System.out.println(myDeck.theDeck[2]);
+        Deck myDeck = new Deck(2);
+        for(int i = 0; i < 75; i++){
+            System.out.println(i);
+            if(myDeck.getPenetration() > 50){
+                myDeck.reshuffleShoe();
+            }
+            myDeck.deal();
+        }
+        System.out.println(myDeck.getPenetration());
+        System.out.println(myDeck.theDeck.length);
+        System.out.println(myDeck.toString());
     }
 }

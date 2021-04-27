@@ -11,24 +11,34 @@ public class Hand {
     private int value;
     private int highValue;
     private int aceCount;
-
+    private boolean isSoft;
     //Constructors
     public Hand(){
         theHand = new ArrayList();
         value = 0;
         aceCount = 0;
+        calculateValues();
     }
 
     public Hand(ArrayList<Card> dealtHand){
         this.theHand = dealtHand;
-        calculateCardValue();
-        calculateAceCount();
+        calculateValues();
     }
 
     public void calculateCardValue(){
         int value = 0;
         for(Card eachCard : theHand){
             value = value + eachCard.getValue();
+        }
+        if (value > 21 && aceCount > 0){
+            int count = 0;
+            while(value > 21 && count != aceCount){
+                value = value - 10;
+                count += 1;
+            }
+            if(count == aceCount){
+                isSoft = false;
+            }
         }
         this.value = value;
     }
@@ -40,12 +50,15 @@ public class Hand {
                 aceCount++;
             }
         }
+        if(aceCount > 0){
+            isSoft = true;
+        }
         this.aceCount = aceCount;
     }
 
     public void calculateValues(){
-        calculateCardValue();
         calculateAceCount();
+        calculateCardValue();
     }
 
     public boolean isOver21(){
@@ -58,11 +71,28 @@ public class Hand {
 
     public boolean isBlackjack() {
         calculateValues();
-        if(value == 21){
+        if(value == 21 && this.getSize() == 2){
             return true;
         }
         return false;
     }
+
+    public boolean hasAce(){
+        if(getAceCount() > 0){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isSplittable(){
+        if(theHand.get(0).getValue() == theHand.get(1).getValue() && this.getSize() == 2){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 
     //getters
     public int getSize() {return theHand.size();}
@@ -80,6 +110,14 @@ public class Hand {
     }
 
     public Card getFirstCard(){return theHand.get(0);}
+
+    public Card getCardInPos(int pos){
+        return theHand.get(pos);
+    }
+
+    public boolean isSoft(){
+        return isSoft;
+    }
 
     @Override
     public String toString() {
@@ -102,6 +140,7 @@ public class Hand {
         hand.add(deck.deal());
         hand.add(deck.deal());
         Hand myHand = new Hand(hand);
+        System.out.println(myHand.getFirstCard().toString());
         int value = myHand.getValue();
         System.out.println(value);
         System.out.println(myHand.isOver21());

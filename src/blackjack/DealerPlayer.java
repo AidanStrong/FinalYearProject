@@ -13,7 +13,7 @@ public class DealerPlayer implements Player{
         dealerHand = new Hand();
     }
 
-    public void dealHand(Hand h){
+    public void giveHand(Hand h){
         dealerHand = h;
     }
 
@@ -31,17 +31,14 @@ public class DealerPlayer implements Player{
         return dealerHand;
     }
 
-    @Override
-    public void setStrategy(CardCount c) {
 
-    }
 
     //dealer hits soft 17
     public Decision makeDecision() {
         if (dealerHand.getValue() < 17){
             decision = Decision.HIT;
         }
-        else if (dealerHand.getValue() == 17 && dealerHand.getAceCount() > 0){
+        else if (dealerHand.getValue() == 17 && dealerHand.isSoft()){
             decision = Decision.HIT;
         }
         else{
