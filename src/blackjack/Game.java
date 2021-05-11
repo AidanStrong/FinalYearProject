@@ -34,8 +34,9 @@ public class Game {
 
     public double playGame(int numRounds){
         int roundCount = 0;
-
+        player.resetBank();
         while(roundCount < numRounds && player.isBankEmpty() == false){
+            System.out.println("\n\n   --- NEW ROUND ---");
             playRound();
             roundCount += 1;
         }
@@ -63,8 +64,8 @@ public class Game {
         //if player has blackjack
         if (playerBJ == true){
             System.out.println("BLACKJACK!");
-            System.out.println(player.getHand().toString());
             if(dealerBJ == true){
+                System.out.println("dealer blackjack!");
                 player.tieBet();
             }
             else{
@@ -75,23 +76,28 @@ public class Game {
         //if no blackjack, play first turn
         else{
             playerDecision = playerFirstTurn();
+            System.out.println("making first turn");
         }
         if (playerDecision == Decision.SURRENDER){
+            System.out.println("surrender");
             player.surrender();
             return;
         }
         if (playerDecision == Decision.DOUBLEDOWN){
+            System.out.println("double down");
             player.doubleDown();
             player.dealCard(shoe.deal());
-            return;
         }
         if(playerDecision == Decision.SPLIT){
             //player.giveSplit(splitHand(player.getHand()));
             playSplit(splitHand(player.getHand()));
+            System.out.println("split");
             return;
         }
         if(playerDecision == Decision.HIT){
+            //deal and extra card
             player.dealCard(shoe.deal());
+            //play the rest of the turn and give them the hand returned
             player.giveHand(playerTurn(player.getHand()));
             playerValue = player.getHand().getValue();
         }
@@ -110,6 +116,7 @@ public class Game {
             }
             //dealer wins on blackjack
             else{
+                System.out.println("dealer blackjack!");
                 player.loseBet();
                 return;
             }
@@ -134,7 +141,6 @@ public class Game {
             System.out.println("BUST!");
             player.loseBet();
         }
-        System.out.println(player.getBank());
     }
 
     public int dealerTurn(){
@@ -143,9 +149,9 @@ public class Game {
             dealerDecision = dealer.makeDecision();
             if (dealerDecision == Decision.HIT) {
                 dealer.dealCard(shoe.deal());
-                System.out.println("dealer hand: " + dealer.getHand().toString());
             }
         }
+        System.out.println("dealer hand: " + dealer.getHand().toString());
         int value = dealer.getHand().getValue();
         return value;
     }
@@ -161,7 +167,6 @@ public class Game {
             decision = player.makeDecision(hand, dealer.getUpCard(), false, strat);
             if (decision == Decision.HIT){
                 hand.addCard(shoe.deal());
-                System.out.println("now hand: " + hand.toString());
             }
         }
         return hand;
@@ -190,7 +195,6 @@ public class Game {
                 dealerTurn();
         }
         for(Hand h : split) {
-            System.out.println("PLAYING SPLIT FOR " + h.toString());
             //if blackjack
             if (h.isBlackjack()) {
                 if (dealer.getHand().isBlackjack()) {
@@ -233,11 +237,20 @@ public class Game {
     //test harness
     public static void main(String[] args) {
         int numDecks = 1;
-        CardCount countStrat = new TenCount(numDecks);
-        HumanPlayer myPlayer = new HumanPlayer();
+        int numRounds = 100;
+        int numGames = 50000;
+        CardCount countStrat = new HiLoCount(numDecks);
 
+        HumanPlayer myPlayer = new HumanPlayer(countStrat);
         Game myGame = new Game(numDecks, myPlayer);
-        double endBank = myGame.playGame(1000000);
+        double totalEndBank = 0;
+        for (int i = 0; i < numGames; i++) {
+            double endBank = myGame.playGame(numRounds);
+            totalEndBank += endBank;
+        }
+        double averageEndBank = totalEndBank / numGames;
+        System.out.println("---");
+        System.out.println("average: " + averageEndBank);
     }
 }
 
@@ -254,4 +267,4 @@ public class Game {
 // > check dealer blackJack
 //make first turn
 // > if surrender,
-//make next turns, if aplpicable
+//make next turns, if applicable

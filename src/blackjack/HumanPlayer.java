@@ -60,6 +60,11 @@ public class HumanPlayer implements Player {
         bank += difference;
     }
 
+    public void resetBank(){
+        bank = 10000;
+        bet = 0;
+    }
+
     public void winBet(){
         bank = bank + bet;
         bet = 0;
@@ -139,7 +144,7 @@ public class HumanPlayer implements Player {
         else{
             bet = minimumBet * 1.2;
         }
-
+        System.out.println("Betting: " + bet);
         //System.out.println("player betting £ " + bet);
     }
 
@@ -162,8 +167,6 @@ public class HumanPlayer implements Player {
         int handValue = hand.getValue();
         int index = 0;
         boolean isSoft = hand.isSoft();
-        System.out.println("SPLITTABLE? " + hand.isSplittable());
-        System.out.println(firstTurn);
         if(firstTurn == true && hand.isSplittable() == true) {
             table = basicStrat.getSplitStrat();
             index = -(hand.getFirstCard().getValue());
@@ -177,16 +180,9 @@ public class HumanPlayer implements Player {
                 index = - 10;
             }
         }
-        if(firstTurn == false && hand.isSplittable() == true && hand.hasAce() == true){
-            System.out.println("THIS ONE");
-        }
-        System.out.println(upCard.toString());
-        System.out.println(hand.toString());
+
         result = table[index + handValue - 2][upCardValue - 2];
-        System.out.println("[" + (index + handValue - 2) + "][" + (upCardValue - 2) + "]");
         decision = Decision.newDecision(decision, result);
-        System.out.println(decision);
-        System.out.println("--\n");
         return decision;
     }
 

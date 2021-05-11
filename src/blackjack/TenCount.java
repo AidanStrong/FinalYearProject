@@ -15,8 +15,8 @@ public class TenCount implements CardCount{
 
     public int countCards(ArrayList<Card> dealtCards, Deck shoe){
         int betUnits = 0;
-        int tenCount = 16 * numDecks;
-        int otherCount = 36 * numDecks;
+        double tenCount = 16 * numDecks;
+        double otherCount = 36 * numDecks;
         for(Card c : dealtCards){
             if(c.getValue() == 10){
                 tenCount -= 1;
@@ -24,8 +24,10 @@ public class TenCount implements CardCount{
                 otherCount -= 1;
             }
         }
+        System.out.println("others: " + otherCount);
+        System.out.println("tens: " + tenCount);
         double ratio = otherCount / tenCount;
-
+        System.out.println("RATIO: " + ratio);
         //Source: Thorp 1962 - Beat the Dealer - pg 106
         // ratio -- bet (in units)
         // >2.00 -- 1(minimum)
