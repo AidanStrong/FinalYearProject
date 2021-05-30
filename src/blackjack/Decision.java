@@ -3,9 +3,13 @@ package blackjack;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An enum class that represents the different playing decisions in the game
+ */
 public enum Decision {
 
-    HIT(1), STAND(2), SURRENDER(3), DOUBLEDOWN(4), SPLIT(5), INSURANCE(6);
+    //insurance not implemented as not in generic basic strategy
+    HIT(1), STAND(2), SURRENDER(3), DOUBLEDOWN(4), SPLIT(5);
     int value;
 
     Decision(int x) {
@@ -20,32 +24,39 @@ public enum Decision {
 //        }
 //    }
 
+    /**
+     *
+     * @return - the int value of the enum
+     */
     public int getValue() {
         return this.value;
     }
 
-    public static Decision newDecision(Decision oldDecision, int newValue) {
+    /**
+     *
+     * @param decision the decision before changing
+     * @param newValue the int value of the new decision
+     * @return returns the new decision
+     */
+    public static Decision newDecision(Decision decision, int newValue) {
         switch (newValue) {
             case 1:
-                oldDecision = Decision.HIT;
+                decision = Decision.HIT;
                 break;
             case 2:
-                oldDecision = Decision.STAND;
+                decision = Decision.STAND;
                 break;
             case 3:
-                oldDecision = Decision.SURRENDER;
+                decision = Decision.SURRENDER;
                 break;
             case 4:
-                oldDecision = Decision.DOUBLEDOWN;
+                decision = Decision.DOUBLEDOWN;
                 break;
             case 5:
-                oldDecision = Decision.SPLIT;
-                break;
-            case 6:
-                oldDecision = Decision.INSURANCE;
+                decision = Decision.SPLIT;
                 break;
         }
-        return oldDecision;
+        return decision;
     }
 
     public static void main(String[] args) {
@@ -53,7 +64,6 @@ public enum Decision {
         System.out.println(decision);
         decision = Decision.newDecision(decision, 3);
         System.out.println(decision);
-
 
     }
 }

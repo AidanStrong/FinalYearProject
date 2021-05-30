@@ -11,35 +11,24 @@ public class HumanPlayer implements Player {
 
     private Hand playerHand;
     private CardCount playerCardCount;
-    double bank = 10000;
-    double bet;
-    boolean isCardCounting;
-    CardCount countStrat;
-    Hand[] split;
-    boolean hasSplit = false;
-
-    //Source: Thorp 1962 - Beat the Dealer
-    // [Ratio][Bet units]
-    //ratio -- bet (in units)
-    // >2.00 -- 1(minimum)
-    // 2.00-1.75 -- 2
-    // 1.75-1.65 -- 4
-    // below 1.65 -- 5
-    double[][] tenCountBet = {
-            {2.01, 1},
-            {2.00, 2},
-            {1.75, 4},
-            {1.65, 5},
-    };
+    private double bank = 10000;
+    private double bet;
+    private boolean isCardCounting;
+    private CardCount countStrat;
+    private Hand[] split;
+    private boolean hasSplit = false;
+    private int minimumBet = 25;
 
     public HumanPlayer() {
         playerHand = new Hand();
         isCardCounting = false;
     }
 
-    public HumanPlayer(CardCount countStrat){
+    public HumanPlayer(CardCount countStrat, int minimumBet, int bank){
         isCardCounting = true;
         this.countStrat = countStrat;
+        this.minimumBet = minimumBet;
+        this.bank = bank;
     }
 
     public Hand getHand() {
@@ -131,15 +120,22 @@ public class HumanPlayer implements Player {
         return bank;
     }
 
+    /**
+     *
+     * @return An interface
+     */
     public CardCount getCountStrat(){
         return playerCardCount;
     }
 
-    public void makeBet(int minimumBet, ArrayList<Card> dealtCards, Deck shoe){
+    public void makeBet(ArrayList<Card> dealtCards, Deck shoe){
 
         if (isCardCounting == true){
             int betUnits = countStrat.countCards(dealtCards, shoe);
             bet = betUnits * minimumBet;
+            if(betUnits == 0){
+                bet = 5;
+            }
         }
         else{
             bet = minimumBet * 1.2;
@@ -190,17 +186,16 @@ public class HumanPlayer implements Player {
         HumanPlayer player = new HumanPlayer();
         //Deck deck = new Deck();
         //Game.dealHandToPlayer(player, deck);
-        Card upCard = new Card(Card.Rank.SIX, Card.Suit.CLUBS);
-        Card card1 = new Card(Card.Rank.ACE, Card.Suit.CLUBS);
-        Card card2 = new Card(Card.Rank.SEVEN, Card.Suit.CLUBS);
+        Card upCard = new Card(Card.Rank.TWO, Card.Suit.CLUBS);
+        Card card1 = new Card(Card.Rank.SIX, Card.Suit.CLUBS);
+        Card card2 = new Card(Card.Rank.SIX, Card.Suit.CLUBS);
         ArrayList<Card> theHand = new ArrayList();
         theHand.add(card1);
         theHand.add(card2);
         Hand hand = new Hand(theHand);
-        player.giveHand(hand);
-        BasicStrategy strat = new BasicStrategy(1);
-        //Decision decision = player.makeDecision(upCard, true, strat);
-        //System.out.println("\n" + decision);
+        BasicStrategy strat = new BasicStrategy(8);
+        Decision decision = player.makeDecision(hand, upCard, true, strat);
+        System.out.println("\n" + decision);
     }
 }
 

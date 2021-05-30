@@ -9,31 +9,52 @@ public class DealerPlayer implements Player{
     private Hand dealerHand;
     private Decision decision;
 
+    /**
+     * constructor that creates a new blank hand
+     */
     public DealerPlayer(){
         dealerHand = new Hand();
     }
 
+    /**
+     *
+     * @param h a Hand object to deal to the player
+     */
     public void giveHand(Hand h){
         dealerHand = h;
     }
 
+    /**
+     *
+     * @return - a Card object that is the dealer's upcard to be observed by the player
+     */
     public Card getUpCard(){
         return dealerHand.getFirstCard();
     }
 
+    /**
+     *
+     * @param c - a Card object to deal to the player
+     */
     @Override
     public void dealCard(Card c) {
         dealerHand.addCard(c);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Hand getHand() {
         return dealerHand;
     }
 
 
-
-    //dealer hits soft 17
+    /**
+     *
+     * @return an enum Decision
+     */
     public Decision makeDecision() {
         if (dealerHand.getValue() < 17){
             decision = Decision.HIT;

@@ -13,14 +13,15 @@ public class Game {
     private DealerPlayer dealer;
     private BasicStrategy strat;
     private int numDecks = 1;
+    private double penertration = 0.5;
 
     //Constructor
-    public Game(int numDecks, HumanPlayer player){
+    public Game(int numDecks, HumanPlayer player, Double penertration){
         shoe = new Deck(numDecks);
         this.player = player;
         dealer = new DealerPlayer();
         strat = new BasicStrategy(numDecks);
-
+        this.penertration = penertration;
         this.numDecks = numDecks;
     }
 
@@ -45,11 +46,11 @@ public class Game {
     }
 
     public void playRound(){
-        if(shoe.getPenetration() > 50){
+        if(shoe.getPenetration() > penertration){
             shoe.reshuffleShoe();
             //player.getCountStrat().resetCount();
         }
-        player.makeBet(5, shoe.getDealtCards(), shoe);
+        player.makeBet(shoe.getDealtCards(), shoe);
 
         dealHandToPlayer(player, shoe);
         dealHandToPlayer(dealer, shoe);
@@ -63,9 +64,9 @@ public class Game {
 
         //if player has blackjack
         if (playerBJ == true){
-            System.out.println("BLACKJACK!");
+         //   System.out.println("BLACKJACK!");
             if(dealerBJ == true){
-                System.out.println("dealer blackjack!");
+              //  System.out.println("dealer blackjack!");
                 player.tieBet();
             }
             else{
@@ -76,22 +77,22 @@ public class Game {
         //if no blackjack, play first turn
         else{
             playerDecision = playerFirstTurn();
-            System.out.println("making first turn");
+          //  System.out.println("making first turn");
         }
         if (playerDecision == Decision.SURRENDER){
-            System.out.println("surrender");
+           // System.out.println("surrender");
             player.surrender();
             return;
         }
         if (playerDecision == Decision.DOUBLEDOWN){
-            System.out.println("double down");
+            //System.out.println("double down");
             player.doubleDown();
             player.dealCard(shoe.deal());
         }
         if(playerDecision == Decision.SPLIT){
             //player.giveSplit(splitHand(player.getHand()));
             playSplit(splitHand(player.getHand()));
-            System.out.println("split");
+            //System.out.println("split");
             return;
         }
         if(playerDecision == Decision.HIT){
@@ -116,7 +117,7 @@ public class Game {
             }
             //dealer wins on blackjack
             else{
-                System.out.println("dealer blackjack!");
+               // System.out.println("dealer blackjack!");
                 player.loseBet();
                 return;
             }
@@ -138,7 +139,7 @@ public class Game {
         }
         //if player did go bust
         else {
-            System.out.println("BUST!");
+           // System.out.println("BUST!");
             player.loseBet();
         }
     }
@@ -151,7 +152,7 @@ public class Game {
                 dealer.dealCard(shoe.deal());
             }
         }
-        System.out.println("dealer hand: " + dealer.getHand().toString());
+        //System.out.println("dealer hand: " + dealer.getHand().toString());
         int value = dealer.getHand().getValue();
         return value;
     }
@@ -183,6 +184,11 @@ public class Game {
         return split;
     }
 
+    /**
+     *
+     * @param split the split or 2hqtever
+     * @return int,
+     */
     public int playSplit(Hand[] split){
         player.splitBet();
         int splitsWon = 0;
@@ -236,21 +242,42 @@ public class Game {
 
     //test harness
     public static void main(String[] args) {
-        int numDecks = 1;
+        int numDecks = 8;
         int numRounds = 100;
         int numGames = 50000;
         CardCount countStrat = new HiLoCount(numDecks);
-
-        HumanPlayer myPlayer = new HumanPlayer(countStrat);
-        Game myGame = new Game(numDecks, myPlayer);
-        double totalEndBank = 0;
+        double penertration = 0.25;
+        int minimumBet = 25;
+        int bankroll = 10000;
+        HumanPlayer myPlayer = new HumanPlayer(countStrat, minimumBet, bankroll);
+        Game myGame = new Game(numDecks, myPlayer, penertration);
+        double[] bankArray = new double[numGames];
         for (int i = 0; i < numGames; i++) {
             double endBank = myGame.playGame(numRounds);
-            totalEndBank += endBank;
+            bankArray[i] = endBank;
         }
-        double averageEndBank = totalEndBank / numGames;
-        System.out.println("---");
-        System.out.println("average: " + averageEndBank);
+        System.out.println("--");
+        double mean = Calculate.mean(bankArray);
+        double advantage = (mean - bankroll) * 100 / bankroll;
+     //   System.out.println("mean: ");
+        System.out.println(mean);
+      //  System.out.println("mean % advantage: ");
+        System.out.println(advantage);
+       // System.out.println("standard deviation: ");
+        System.out.println(Calculate.standardDeviation(bankArray));
+
+      //  System.out.println("min value: ");
+        System.out.println(Calculate.min(bankArray));
+       // System.out.println("max value: ");
+        System.out.println(Calculate.max(bankArray));
+
+       // System.out.println("-- percentiles --");
+        System.out.println(Calculate.percentile(bankArray, 0.05));
+        System.out.println(Calculate.percentile(bankArray, 0.25));
+        System.out.println(Calculate.percentile(bankArray, 0.50));
+        System.out.println(Calculate.percentile(bankArray, 0.75));
+        System.out.println(Calculate.percentile(bankArray, 0.95));
+
     }
 }
 

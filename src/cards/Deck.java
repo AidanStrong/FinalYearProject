@@ -4,40 +4,60 @@ import java.io.Serializable;
 import java.util.Random;
 import java.util.*;
 
+/**
+ * This class describes a deck/shoe, including an array of cards, array of dealt cards, penetration, an iterator and a reshuffle
+ */
 public class Deck implements Iterable<Card> {
 
     private int numDecks = 1;
 
-    Card[] theDeck;
+    private Card[] theDeck;
     private Iterator<Card> deckIt = iterator();
     private double penetration;
     private ArrayList<Card> dealtCards;
 
+    //constructors
     public Deck() {
         newDeck();
         theDeck = new Card[numDecks * 52];
     }
 
+    /**
+     * @param numDecks the number of decks to be in the shoe
+     */
     public Deck(int numDecks) {
         this.numDecks = numDecks;
         theDeck = new Card[numDecks * 52];
         newDeck();
     }
 
-    //getters
+    /**
+     *
+     * @return - returns the deck/shoe, an array of card objects
+     */
     public Card[] getTheDeck() {
         return theDeck;
     }
 
+    /**
+     *
+     * @return - ArrayList of Card objects already dealt since last reshuffle
+     */
     public ArrayList<Card> getDealtCards(){
         return dealtCards;
     }
 
+    /**
+     *
+     * @return - number of cards in the shoe
+     */
     public int getSize() {
         return theDeck.length;
     }
 
-    //create the deck
+    /**
+     * creates a new deck/shoe and shuffles
+     */
     public void newDeck() {
         int n = 0;
 
@@ -60,15 +80,26 @@ public class Deck implements Iterable<Card> {
         }
         dealtCards = new ArrayList();
     }
-    //return next card, used for dealing cards
+
+    /**
+     *
+     * @return - the neck Card in the deck iterator
+     */
     public Card deal(){
         return deckIt.next();
     }
 
+    /**
+     *
+     * @return - a double reprenting shoe penetration, the proportion of cards already dealt since last reshuffle
+     */
     public double getPenetration(){
         return penetration;
     }
 
+    /**
+     * reshuffles the deck/shoe
+     */
     public void reshuffleShoe(){
         newDeck();
         deckIt = iterator();
@@ -96,7 +127,7 @@ public class Deck implements Iterable<Card> {
             Card nextCard;
             nextCard = theDeck[currentPointer];
             currentPointer += 1;
-            penetration = (currentPointer*100)/(numDecks * 52);
+            penetration = (currentPointer)/(double)(numDecks * 52);
             dealtCards.add(nextCard);
             //System.out.println("dealing " + nextCard.toString());
             return nextCard;

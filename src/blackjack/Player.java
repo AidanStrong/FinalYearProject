@@ -5,13 +5,22 @@ import cards.Hand;
 
 public interface Player {
 
-    //give player a hand
+    /**
+     *
+     * @param h a Hand object to deal to the player
+     */
     void giveHand(Hand h);
 
-    //deal a card to the player's hand
+    /**
+     *
+     * @param c - a Card object to deal to the player
+     */
     void dealCard(Card c);
 
-    //return hand
+    /**
+     *
+     * @return - the Hand object held by the player
+     */
     Hand getHand();
 
 }

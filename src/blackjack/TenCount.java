@@ -5,14 +5,28 @@ import cards.Deck;
 
 import java.util.ArrayList;
 
+/**
+ * A class that implements CardCount and uses ten count, a card counting method based on counting number of tens
+ */
 public class TenCount implements CardCount{
 
     int numDecks;
 
+    /**
+     *
+     * @param numDecks the number of decks in the shoe
+     */
     public TenCount(int numDecks){
         this.numDecks = numDecks;
     }
 
+    /**
+     *
+     * @param dealtCards an arrayList of card objects that are the cards dealt since last reshuffle
+     * @param shoe the shoe/deck for the game as a Deck object
+     * @return
+     */
+    @Override
     public int countCards(ArrayList<Card> dealtCards, Deck shoe){
         int betUnits = 0;
         double tenCount = 16 * numDecks;
@@ -24,10 +38,7 @@ public class TenCount implements CardCount{
                 otherCount -= 1;
             }
         }
-        System.out.println("others: " + otherCount);
-        System.out.println("tens: " + tenCount);
         double ratio = otherCount / tenCount;
-        System.out.println("RATIO: " + ratio);
         //Source: Thorp 1962 - Beat the Dealer - pg 106
         // ratio -- bet (in units)
         // >2.00 -- 1(minimum)
@@ -60,10 +71,6 @@ public class TenCount implements CardCount{
         return betUnits;
     }
 
-    @Override
-    public void resetCount() {
-
-    }
 
     //test harness
     public static void main(String[] args) {

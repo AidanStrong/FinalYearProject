@@ -5,14 +5,28 @@ import cards.Deck;
 
 import java.util.ArrayList;
 
+/**
+ * A class that implements CardCount and uses HiLo, a card counting method based on incrementing
+ * and decrementing a counter by one depending on the cards dealt, then calculating a true count and betting accordingly
+ */
 public class HiLoCount implements CardCount{
 
     private int numDecks = 1;
 
+    /**
+     *
+     * @param numDecks the number of decks in the shoe
+     */
     public HiLoCount(int numDecks){
         this.numDecks = numDecks;
     }
 
+    /**
+     *
+     * @param dealtCards an arrayList of card objects that are the cards dealt since last reshuffle
+     * @param shoe the shoe/deck for the game as a Deck object
+     * @return
+     */
     @Override
     public int countCards(ArrayList<Card> dealtCards, Deck shoe) {
         int runningCount = 0;
@@ -28,87 +42,85 @@ public class HiLoCount implements CardCount{
 
         double remainingDecks;
         if(numDecks != 1){
-            remainingDecks = shoe.getPenetration() * numDecks;
-            System.out.println("remaining decks: " + remainingDecks);
+            remainingDecks = (1 - shoe.getPenetration()) * numDecks;
+            remainingDecks = Math.round(remainingDecks);
+
         }
         else{
             remainingDecks = 1;
         }
         double trueCount = runningCount / remainingDecks;
+        System.out.println("trueCount: " + trueCount);
 
-        // >2.00 -- 1(minimum)
-        // 2.00-1.75 -- 2
-        // 1.75-1.65 -- 4
-        // below 1.65 -- 5
-        System.out.println("ratio: " + trueCount);
-//        if(TrueCount < 1.65){
-//            betUnits = 5;
-//        }
-//        else if(TrueCount >= 1.65 && TrueCount < 1.75){
-//            betUnits = 4;
-//        }
-//        else if(TrueCount >= 1.75 && TrueCount < 2.00){
-//            betUnits = 2;
-//        }
-//        else if(TrueCount >= 2.00){
-//            betUnits = 1;
-//        }
 
-        // each count represents an ~ increase in advantage of 0.5%
-        // according to thorpe:
-         // ratio -- % advantage -- bet units
+
+
+        // each count represents an ~ increase in advantage of 0.5% -> my workings from thorp's paper
+        // according to thorp:
+         // T/O ratio -- % advantage -- bet units
         // 3.00 -- -2% -- 1
         // 2.00 -- 1% -- 2
         // 1.75 -- 2% -- 4
         // 1.63 -- 3% -- ~5
         // 1.50 -- 4%
-        double approximateAdvantage = -0.5 + (trueCount * 0.5);
+        double approximateAdvantage = trueCount * 0.5;
         System.out.println("advantage " + approximateAdvantage);
-//        if(trueCount <= 0.5){
+//        if(approximateAdvantage > 3){
+//            betUnits = 5;
+//        }
+//        else if(approximateAdvantage <= 3 && approximateAdvantage > 2){
+//            betUnits = 4;
+//        }
+//        else if(approximateAdvantage <= 2 && approximateAdvantage > 1){
+//            betUnits = 2;
+//        }
+//        else if(approximateAdvantage <= 1){
+//            betUnits = 1;
+//
+//        }
+        if(trueCount >= 6){
+            betUnits = 5;
+        }
+        else if(trueCount < 2){
+            betUnits = 1;
+
+        }else{
+            betUnits = (int)(Math.round(trueCount));
+        }
+//        if(trueCount < 1){
 //            //advantage is negative, bet minimum
 //            betUnits = 1;
 //        }
-//        else if(approximateAdvantage > 1 && approximateAdvantage < 2){
+//        else if(trueCount >= 1 && trueCount < 2){
 //            betUnits = 2;
 //        }
-//        else if(approximateAdvantage >= 2 && approximateAdvantage < 3){
+//        else if(trueCount >= 2 && trueCount < 3){
 //            betUnits = 4;
 //        }
-//        else if(approximateAdvantage >= 3 && approximateAdvantage < 4){
-//            betUnits = 5;
-//        }
-//        else if(approximateAdvantage >= 4 && approximateAdvantage < 5){
+//        else if(trueCount >= 3){
 //            betUnits = 6;
+//
 //        }
-//        else if(approximateAdvantage >= 5){
-//            betUnits = 7;
-//        }
-
-        if(trueCount < 1){
-            //advantage is negative, bet minimum
-            betUnits = 1;
-        }
-        else if(trueCount >= 1 && trueCount < 2){
-            betUnits = 2;
-        }
-        else if(trueCount >= 2 && trueCount < 3){
-            betUnits = 4;
-        }
-        else if(trueCount >= 3 && trueCount < 4){
-            betUnits = 6;
-        }
-        else if(trueCount >= 4 && trueCount < 5){
-            betUnits = 8;
-        }
-        else if(trueCount >= 5){
-            betUnits = 10;
-        }
         System.out.println("BET UNITS " + betUnits);
         return betUnits;
     }
 
-    @Override
-    public void resetCount() {
-
-    }
 }
+
+//        else if(trueCount < 6 && trueCount >= 4){
+//        betUnits = 4;
+//        }
+//        else if(trueCount < 4 && trueCount >= 2){
+//        betUnits = 2;
+//        }
+
+
+// ### option to divide by all remaining cards to find a true count index ###
+//        double trueCount = (double)runningCount / (((numDecks*52) - dealtCards.size()));
+//        trueCount = Math.round(trueCount * 100);
+//        System.out.println("trueCount: " + trueCount);
+//        if(trueCount <= 2){
+//            betUnits = 1;
+//        }else{
+//            betUnits = (int)Math.round(trueCount/2);
+//        }
