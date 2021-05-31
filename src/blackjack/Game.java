@@ -16,6 +16,13 @@ public class Game {
     private double penertration = 0.5;
 
     //Constructor
+
+    /**
+     *
+     * @param numDecks the number of decks in the game
+     * @param player the player
+     * @param penertration the amount of deck penetration before reshuffling
+     */
     public Game(int numDecks, HumanPlayer player, Double penertration){
         shoe = new Deck(numDecks);
         this.player = player;
@@ -25,6 +32,11 @@ public class Game {
         this.numDecks = numDecks;
     }
 
+    /**
+     *
+     * @param player the player to deal a hand to
+     * @param deck the deck to deal from
+     */
     public static void dealHandToPlayer(Player player, Deck deck){
         ArrayList<Card> cardPair = new ArrayList();
         Hand hand = new Hand(cardPair);
@@ -33,6 +45,11 @@ public class Game {
         player.giveHand(hand);
     }
 
+    /**
+     *
+     * @param numRounds number of rounds to play in the game
+     * @return returns the end bankroll for the player
+     */
     public double playGame(int numRounds){
         int roundCount = 0;
         player.resetBank();
@@ -45,6 +62,9 @@ public class Game {
         return player.getBank();
     }
 
+    /**
+     * plays a round and settles bets
+     */
     public void playRound(){
         if(shoe.getPenetration() > penertration){
             shoe.reshuffleShoe();
@@ -144,6 +164,10 @@ public class Game {
         }
     }
 
+    /**
+     *
+     * @return the value of the dealer's hand after their turn
+     */
     public int dealerTurn(){
         Decision dealerDecision = Decision.HIT;
         while (dealer.getHand().isOver21() == false && dealerDecision != Decision.STAND) {
@@ -157,11 +181,20 @@ public class Game {
         return value;
     }
 
+    /**
+     *
+     * @return the enum decision for the player's first play move
+     */
     public Decision playerFirstTurn(){
         Decision decision = player.makeDecision(player.getHand(), dealer.getUpCard(), true, strat);
         return decision;
     }
 
+    /**
+     *
+     * @param hand the starting hand of the player
+     * @return the hand that the player ends with after their turn
+     */
     public Hand playerTurn(Hand hand){
         Decision decision = Decision.HIT;
         while (hand.isOver21() == false && decision != Decision.STAND && hand.isBlackjack() == false){ //if hand < 21 and decision false
@@ -173,6 +206,11 @@ public class Game {
         return hand;
     }
 
+    /**
+     *
+     * @param playerHand the starting hand that is to be split
+     * @return an array of Hand objects that hav been split and dealt
+     */
     public Hand[] splitHand(Hand playerHand){
         Hand split1 = new Hand();
         Hand split2 = new Hand();
@@ -186,8 +224,8 @@ public class Game {
 
     /**
      *
-     * @param split the split or 2hqtever
-     * @return int,
+     * @param split Array of Hand objects to be played as splits
+     * @return returns number of splits won
      */
     public int playSplit(Hand[] split){
         player.splitBet();

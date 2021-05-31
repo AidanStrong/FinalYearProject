@@ -19,11 +19,18 @@ public class HumanPlayer implements Player {
     private boolean hasSplit = false;
     private int minimumBet = 25;
 
+    // constructors
     public HumanPlayer() {
         playerHand = new Hand();
         isCardCounting = false;
     }
 
+    /**
+     *
+     * @param countStrat the card counting strategy
+     * @param minimumBet the minimum bet
+     * @param bank the starting bankroll
+     */
     public HumanPlayer(CardCount countStrat, int minimumBet, int bank){
         isCardCounting = true;
         this.countStrat = countStrat;
@@ -31,84 +38,133 @@ public class HumanPlayer implements Player {
         this.bank = bank;
     }
 
+    /**
+     *
+     * @return a Hand object that is the player's hand
+     */
     public Hand getHand() {
         return playerHand;
     }
 
-    public void giveSplit(Hand[] split){
-        playerHand = null;
-        this.split = split;
-        hasSplit = true;
-    }
-
+    /**
+     *
+     * @param h a Hand object to deal to the player
+     */
     public void giveHand(Hand h) {
         playerHand = h;
     }
 
+    /**
+     *
+     * @param difference an integer to increase the bankroll by
+     */
     public void changeBank(int difference){
         bank += difference;
     }
 
+    /**
+     * resets bank to default £10,000
+     */
     public void resetBank(){
         bank = 10000;
         bet = 0;
     }
 
+    /**
+     * gives the player their bet if they win
+     */
     public void winBet(){
         bank = bank + bet;
         bet = 0;
     }
 
+    /**
+     * takes away the player's bet if they lose
+     */
     public void loseBet(){
         bank = bank - bet;
         bet = 0;
     }
 
+    /**
+     * no changes if it is a tie
+     */
     public void tieBet(){
         bet = 0;
     }
 
+    /**
+     * gives 1.5x the bet if they win with blackjack
+     */
     public void winBlackjack(){
         bank = bank + (bet * 1.5);
         bet = 0;
     }
 
+    /**
+     * doubles the bet
+     */
     public void doubleDown(){
         bet = bet * 2;
     }
 
+    /**
+     * surrenders the bet
+     */
     public void surrender(){
         bank = bank - (bet/2);
         bet = 0;
     }
 
+    /**
+     * doubles the bet for splitting
+     */
     public void splitBet(){
         bet = bet * 2;
     }
 
+    /**
+     * wins one of the splits
+     */
     public void winSplitBet(){
         bet = bet / 2;
         bank = bank + bet;
     }
 
+    /**
+     * loses one of the splits
+     */
     public void loseSplitBet(){
         bet = bet / 2;
         bank = bank - bet;
     }
 
+    /**
+     * ties one of the splits
+     */
     public void tieSplitBet(){
         bet = bet / 2;
     }
 
+    /**
+     * wins a blackjack on a split
+     */
     public void winBJsplitBet(){
         bet = bet / 2;
         bank = bank + (bet * 1.5);
     }
 
+    /**
+     * resets the bet after split
+     */
     public void endSplitBet(){
         bet = 0;
     }
 
+    /**
+     *
+     * @return a boolean dictating if the bank is empty or not
+     */
     public boolean isBankEmpty(){
         if (bank <= 0){
             return true;
@@ -116,18 +172,26 @@ public class HumanPlayer implements Player {
         return false;
     }
 
+    /**
+     *
+     * @return a double that is the bankroll
+     */
     public double getBank(){
         return bank;
     }
 
     /**
-     *
-     * @return An interface
+     * @return the card counting strategy used
      */
     public CardCount getCountStrat(){
         return playerCardCount;
     }
 
+    /**
+     * uses card counting to determine how much to bet
+     * @param dealtCards the cards dealt so far
+     * @param shoe the current shoe
+     */
     public void makeBet(ArrayList<Card> dealtCards, Deck shoe){
 
         if (isCardCounting == true){
@@ -144,6 +208,10 @@ public class HumanPlayer implements Player {
         //System.out.println("player betting £ " + bet);
     }
 
+    /**
+     *
+     * @param c - a Card object to deal to the player
+     */
     @Override
     public void dealCard(Card c) {
         if (hasSplit == false){
@@ -155,6 +223,14 @@ public class HumanPlayer implements Player {
 
     }
 
+    /**
+     *
+     * @param hand the player's current hand
+     * @param upCard the dealer's up card to observe
+     * @param firstTurn a boolean informing the method if it is the player's first move of their turn or not
+     * @param basicStrat the basic strategy object in use
+     * @return an enum decision
+     */
     public Decision makeDecision(Hand hand, Card upCard, boolean firstTurn, BasicStrategy basicStrat) {
         int[][] table;
         int result;
@@ -198,41 +274,3 @@ public class HumanPlayer implements Player {
         System.out.println("\n" + decision);
     }
 }
-
-//
-//    //hard hand means no ace
-//    double[][] hardHand_48Deck = {
-//            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //2
-//            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //3
-//            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //4
-//            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //5
-//            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //6
-//            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //7
-//            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, //8
-//            {1, 4, 4, 4, 4, 1, 1, 1, 1, 1}, //9
-//            {4, 4, 4, 4, 4, 4, 4, 4, 1, 1}, //10
-//            {4, 4, 4, 4, 4, 4, 4, 4, 4, 4}, //11
-//            {1, 1, 2, 2, 2, 1, 1, 1, 1, 1}, //12
-//            {2, 2, 2, 2, 2, 1, 1, 1, 1, 1}, //13
-//            {2, 2, 2, 2, 2, 1, 1, 1, 1, 1}, //14
-//            {2, 2, 2, 2, 2, 1, 1, 1, 3, 3}, //15
-//            {2, 2, 2, 2, 2, 1, 1, 3, 3, 3}, //16
-//            {2, 2, 2, 2, 2, 2, 2, 2, 2, 3}, //17
-//            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, //18
-//            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, //19
-//            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, //20
-//            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, //21
-//    };
-//
-//    //soft hand means ace is in hand
-//    int[][] softHand_48Deck = {
-//            {1, 1, 1, 4, 4, 1, 1, 1, 1, 1}, //13 - 2
-//            {1, 1, 1, 4, 4, 1, 1, 1, 1, 1}, //14 - 3
-//            {1, 1, 4, 4, 4, 1, 1, 1, 1, 1}, //15 - 4
-//            {1, 1, 4, 4, 4, 1, 1, 1, 1, 1}, //16 - 5
-//            {1, 4, 4, 4, 4, 1, 1, 1, 1, 1}, //17 - 6
-//            {4, 4, 4, 4, 4, 2, 2, 1, 1, 1}, //18 - 7
-//            {2, 2, 2, 2, 2, 4, 2, 2, 2, 2}, //19 - 8
-//            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, //20 - 9
-//            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, //21 - BJ
-//    };
