@@ -67,7 +67,7 @@ public class TenCount implements CardCount{
         else if(ratio >= 2.00){
             betUnits = 1;
         }
-        System.out.println("BET UNITS " + betUnits);
+       // System.out.println("BET UNITS " + betUnits);
         return betUnits;
     }
 

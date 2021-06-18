@@ -204,7 +204,7 @@ public class HumanPlayer implements Player {
         else{
             bet = minimumBet * 1.2;
         }
-        System.out.println("Betting: " + bet);
+       // System.out.println("Betting: " + bet);
         //System.out.println("player betting £ " + bet);
     }
 

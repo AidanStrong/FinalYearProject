@@ -54,7 +54,7 @@ public class Game {
         int roundCount = 0;
         player.resetBank();
         while(roundCount < numRounds && player.isBankEmpty() == false){
-            System.out.println("\n\n   --- NEW ROUND ---");
+           // System.out.println("\n\n   --- NEW ROUND ---");
             playRound();
             roundCount += 1;
         }
@@ -280,11 +280,11 @@ public class Game {
 
     //test harness
     public static void main(String[] args) {
-        int numDecks = 8;
+        int numDecks = 1;
         int numRounds = 100;
-        int numGames = 50000;
+        int numGames = 10000;
         CardCount countStrat = new HiLoCount(numDecks);
-        double penertration = 0.25;
+        double penertration = 0.75;
         int minimumBet = 25;
         int bankroll = 10000;
         HumanPlayer myPlayer = new HumanPlayer(countStrat, minimumBet, bankroll);

@@ -50,10 +50,7 @@ public class HiLoCount implements CardCount{
             remainingDecks = 1;
         }
         double trueCount = runningCount / remainingDecks;
-        System.out.println("trueCount: " + trueCount);
-
-
-
+        //System.out.println("trueCount: " + trueCount);
 
         // each count represents an ~ increase in advantage of 0.5% -> my workings from thorp's paper
         // according to thorp:
@@ -64,7 +61,7 @@ public class HiLoCount implements CardCount{
         // 1.63 -- 3% -- ~5
         // 1.50 -- 4%
         double approximateAdvantage = trueCount * 0.5;
-        System.out.println("advantage " + approximateAdvantage);
+     //   System.out.println("advantage " + approximateAdvantage);
 //        if(approximateAdvantage > 3){
 //            betUnits = 5;
 //        }
@@ -78,8 +75,8 @@ public class HiLoCount implements CardCount{
 //            betUnits = 1;
 //
 //        }
-        if(trueCount >= 6){
-            betUnits = 5;
+        if(trueCount >= 8){
+            betUnits = 7;
         }
         else if(trueCount < 2){
             betUnits = 1;
@@ -101,7 +98,7 @@ public class HiLoCount implements CardCount{
 //            betUnits = 6;
 //
 //        }
-        System.out.println("BET UNITS " + betUnits);
+      //  System.out.println("BET UNITS " + betUnits);
         return betUnits;
     }
 

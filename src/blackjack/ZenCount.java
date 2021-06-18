@@ -51,9 +51,9 @@ public class ZenCount implements CardCount {
         int cardsUsed = dealtCards.size();
         int remainingCards = (numDecks * 52) - cardsUsed;
         int reaminingQuarters = Math.round(remainingCards / 13);
-        System.out.println("running count: " + runningCount + " ### quarters: " + reaminingQuarters);
+      //  System.out.println("running count: " + runningCount + " ### quarters: " + reaminingQuarters);
         double trueEdge = (double)runningCount / (double)reaminingQuarters;
-        System.out.println("zen trueCount: " + trueEdge);
+       // System.out.println("zen trueCount: " + trueEdge);
 
         // according to thorpe:
         // ratio -- % advantage -- bet units
@@ -89,7 +89,7 @@ public class ZenCount implements CardCount {
         if(betUnits == 0){
             betUnits = 1;
         }
-        System.out.println("BET UNITS " + betUnits);
+     //   System.out.println("BET UNITS " + betUnits);
         return betUnits;
         // Divide bankroll by 400 to determine kelly unit,
         // bet one kelly unit for every 1/2% advantage

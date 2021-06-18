@@ -71,14 +71,24 @@ public class Calculate {
     }
 
     public static void main(String[] args) {
-        double[] deviationData = {9, 2, 5, 4, 12, 7, 8, 11, 9, 3, 7, 4, 12, 5, 4, 10, 9, 6, 9, 4};
-        System.out.println(mean(deviationData));
-        System.out.println(standardDeviation(deviationData));
+//        double[] deviationData = {9, 2, 5, 4, 12, 7, 8, 11, 9, 3, 7, 4, 12, 5, 4, 10, 9, 6, 9, 4};
+//        System.out.println(mean(deviationData));
+//        System.out.println(standardDeviation(deviationData));
+//
+//        double[] percentileData = {75, 77, 78, 78, 80, 81, 81, 82, 83, 84, 84, 84, 85, 87, 87, 88, 88, 88, 89, 90};
+//        System.out.println(percentile(percentileData, 0.95));
+//        System.out.println(min(percentileData));
+//        System.out.println(max(percentileData));
 
-        double[] percentileData = {75, 77, 78, 78, 80, 81, 81, 82, 83, 84, 84, 84, 85, 87, 87, 88, 88, 88, 89, 90};
-        System.out.println(percentile(percentileData, 0.95));
-        System.out.println(min(percentileData));
-        System.out.println(max(percentileData));
+        double[] x1 = {96, 121, 89, 87, 112, 9, 6, 8, 11, 12};
+        System.out.println(mean(x1));
+        System.out.println(standardDeviation(x1));
+        System.out.println("--");
+        double[] x2 = {8, 9, 10, 11, 11, 22, 24, 23, 22, 22};
+        System.out.println(mean(x2));
+        System.out.println(standardDeviation(x2));
+
+
 
     }
 }
